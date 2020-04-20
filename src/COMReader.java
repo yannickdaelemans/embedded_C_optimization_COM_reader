@@ -1,6 +1,6 @@
 import java.io.*;
 import java.util.*;
-import javax.comm.*;
+import gnu.io.*;
 
 public class COMReader implements Runnable, SerialPortEventListener{
     static CommPortIdentifier portId;
@@ -10,14 +10,15 @@ public class COMReader implements Runnable, SerialPortEventListener{
     Thread readThread;
 
     public COMReader(){
-        Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
+        Enumeration portEnum = CommPortIdentifier.getPortIdentifiers();
 
         while(portEnum.hasMoreElements()){
-            CommPortIdentifier currPortId = portEnum.nextElement();
-
+            CommPortIdentifier currPortId = (CommPortIdentifier) portEnum.nextElement();
+            System.out.println(currPortId.getName());
             if(currPortId.getName().equals("COM11")){   // port on this Windows computer
                 if(currPortId.getPortType() == CommPortIdentifier.PORT_SERIAL){
                     portId = currPortId;                // set the portId
+                    System.out.println("Here");
                 }else{
                     System.out.println("the port must be SERIAL");
                     System.out.println("Shutting down program");
@@ -28,6 +29,12 @@ public class COMReader implements Runnable, SerialPortEventListener{
     }
 
     public void StartReadingThread(){
+        // check if portId is initialised
+        if(portId == null){
+            System.out.println("the port is not initialised");
+            System.out.println("Shutting down program");
+            System.exit(0);              // exiting the program
+        }
         // open the COM port
         try{
             serialPort = (SerialPort) portId.open("COMReader", 2000);
