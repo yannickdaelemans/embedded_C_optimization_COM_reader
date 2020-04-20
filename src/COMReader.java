@@ -18,7 +18,7 @@ public class COMReader implements Runnable, SerialPortEventListener{
             if(currPortId.getName().equals("COM11")){   // port on this Windows computer
                 if(currPortId.getPortType() == CommPortIdentifier.PORT_SERIAL){
                     portId = currPortId;                // set the portId
-                    System.out.println("Here");
+                    System.out.println("Port set");
                 }else{
                     System.out.println("the port must be SERIAL");
                     System.out.println("Shutting down program");
@@ -94,7 +94,8 @@ public class COMReader implements Runnable, SerialPortEventListener{
                     while (inputStream.available() > 0) {
                         int numBytes = inputStream.read(readBuffer);
                     }
-                    System.out.print(new String(readBuffer));
+                    System.out.println("Here Now");
+                    System.out.println(new String(readBuffer));
                 } catch (IOException e) {System.out.println(e);}
                 break;
         }
