@@ -1,12 +1,15 @@
 import com.fazecast.jSerialComm.SerialPort;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.*;
 //import gnu.io.*;
 
 public class COMReader{
     SerialPort[] portList;
     SerialPort comPort;
+
+    int messageSize = 8;
 
     public COMReader(){
         portList = SerialPort.getCommPorts();
@@ -41,11 +44,9 @@ public class COMReader{
     public void reading(){
         try {
             while (true){
-                while (comPort.bytesAvailable() == 0){
-                    System.out.println("Sleeping");
-                    Thread.sleep(10000);
+                while (comPort.bytesAvailable() < messageSize){
+                    Thread.sleep(100);
                 }
-                System.out.println("NOT Sleeping");
                 byte[] readBuffer = new byte[comPort.bytesAvailable()];
                 int numRead = comPort.readBytes(readBuffer, readBuffer.length);
                 if (numRead > 0){
@@ -65,11 +66,41 @@ public class COMReader{
     }
 
     public void readOutBuffer(byte[] readBuffer){
+        //reverseBuffer(readBuffer);
+        byte[][] splitArray = new byte[4][2];
+        splitArray = SplitUpArray(readBuffer);
         int bufferLength = readBuffer.length;
         while(bufferLength > 0){
             bufferLength--;
             System.out.println(readBuffer[bufferLength]);
         }
+        for (int i =0; i<4; i++){
+            System.out.print(splitArray[i][0] + " ");
+            System.out.println(splitArray[i][1]);
+        }
+
+    }
+
+    private byte[] reverseBuffer(byte[] readBuffer){
+      byte[] reversedBuffer;
+
+      Collections.reverse(Arrays.asList(readBuffer));
+
+      return readBuffer;
+    }
+
+    private byte[][] SplitUpArray(byte[] readBuffer){
+        byte[][] splitArray = new byte[4][2];
+        int bufferSize = readBuffer.length;
+        bufferSize--;
+        for (int i = 3; i>=0; i--){
+            for (int j =0; j<2; j++){
+                splitArray[i][j] = readBuffer[bufferSize];
+                bufferSize--;
+            }
+        }
+
+        return splitArray;
     }
 
 }
