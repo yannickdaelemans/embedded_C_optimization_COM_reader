@@ -1,9 +1,12 @@
+import java.io.FileNotFoundException;
+
 public class main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         COMReader comReader = new COMReader();
-        comReader.initPort();
+        comReader.initialize();
         comReader.reading();
+
     }
 
 }

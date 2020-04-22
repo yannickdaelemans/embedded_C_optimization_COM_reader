@@ -6,6 +6,8 @@ import java.util.*;
 //import gnu.io.*;
 
 public class COMReader{
+    FileWriter fileWriter;
+
     SerialPort[] portList;
     SerialPort comPort;
 
@@ -32,13 +34,18 @@ public class COMReader{
         }
     }
 
-    public void initPort(){
+    public void initialize() throws FileNotFoundException {
+        // initialize port
         comPort.setBaudRate(9600);
         comPort.setNumDataBits(8);
         comPort.setNumStopBits(1);
         comPort.setParity(0);
         comPort.setFlowControl(0);
         comPort.openPort();
+
+        // initialize file
+        fileWriter = new FileWriter();
+        fileWriter.InitializeFile("name");
     }
 
     public void reading(){
@@ -52,6 +59,7 @@ public class COMReader{
                 if (numRead > 0){
                     System.out.println("Read " + numRead + " bytes.");
                     readOutBuffer(readBuffer);
+                    fileWriter.WriteToFile(SplitUpArray(readBuffer));
                 }
                 else if (numRead == 0){
                     System.out.println("No bytes were read");
