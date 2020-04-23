@@ -59,7 +59,7 @@ public class COMReader{
                  //do not write to file though!
                 int timer = 2000;
                 while (comPort.bytesAvailable() < messageSize && timer >= 0){
-                    Thread.sleep(100);
+                    Thread.sleep(10);
                     timer --;
                 }
 
@@ -80,6 +80,7 @@ public class COMReader{
                 }
                 testAmount--;
             }
+            fileWriter.closeBufferdWriter();
         }catch (Exception e){
             System.out.println(e);
         }

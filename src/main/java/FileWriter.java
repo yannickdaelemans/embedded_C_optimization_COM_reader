@@ -43,4 +43,13 @@ public class FileWriter {
 
     }
 
+    public void closeBufferdWriter() throws IOException {
+        try {
+            bW.close();
+        }catch (IOException e){
+            System.out.println(e);
+        }
+
+    }
+
 }

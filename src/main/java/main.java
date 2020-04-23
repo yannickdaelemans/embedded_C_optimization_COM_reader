@@ -9,7 +9,7 @@ public class main {
 
         COMReader comReader = new COMReader();
         comReader.initialize();
-        comReader.reading(byteToWrite, 500);
+        comReader.reading(byteToWrite, 50);
 
     }
 
