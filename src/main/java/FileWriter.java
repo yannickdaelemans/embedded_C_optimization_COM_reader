@@ -10,7 +10,7 @@ public class FileWriter {
     public void InitializeFile(String name) throws FileNotFoundException{
         try{
             fileName = name;
-            file = new File(name);
+            file = new File(name+".txt");
             if(file.createNewFile()){
                 System.out.println("File created with name: "+ name);
             } else{

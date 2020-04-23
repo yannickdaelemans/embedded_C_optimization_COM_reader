@@ -7,7 +7,7 @@ public class COMReader{
     private FileWriter fileWriter;
 
     private SerialPort[] portList;
-    private SerialPort comPort;
+    SerialPort comPort;
 
     private int messageSize = 8;
 
@@ -17,6 +17,7 @@ public class COMReader{
 
         while(listLength > 0){
             listLength --;
+            System.out.println(listLength);
             SerialPort currPort = portList[listLength];
             System.out.println(currPort.getSystemPortName());
             if(currPort.getSystemPortName().equals("COM11")){
@@ -24,11 +25,11 @@ public class COMReader{
                 System.out.println("connecting to: " + comPort.getPortDescription());
                 break;
             }
-            if(listLength == 0){
-                System.out.println("ERROR: Port could not be found");
-                System.out.println("Program shutting down");
-                System.exit(0);
-            }
+        }
+        if(listLength == 0){
+            System.out.println("ERROR: Port could not be found");
+            System.out.println("Program shutting down");
+            System.exit(0);
         }
     }
 
@@ -49,12 +50,14 @@ public class COMReader{
     public void reading(byte[] write, int testAmount){
         try {
             while (testAmount > 0){
-                comPort.writeBytes(write, 1);
+                if (comPort.writeBytes(write, 1) < 0){
+                    System.out.println("an error occurred when sending over UART");
+                }
 
                  //If, after 2 seconds 6 pieces of data have not been read, go further, and read out the buffer anyway
                  //do not write to file though!
-                int timer = 20;
-                while (comPort.bytesAvailable() < messageSize && timer >= 0){
+                int timer = 2000;
+                while (comPort.bytesAvailable() < messageSize){ //&& timer >= 0){
                     Thread.sleep(100);
                     timer --;
                 }
