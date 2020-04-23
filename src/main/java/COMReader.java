@@ -3,6 +3,7 @@ import com.fazecast.jSerialComm.SerialPort;
 import java.io.*;
 import java.util.*;
 
+
 public class COMReader{
     private FileWriter fileWriter;
 
@@ -44,7 +45,7 @@ public class COMReader{
 
         // initialize file
         fileWriter = new FileWriter();
-        fileWriter.InitializeFile("name");
+        fileWriter.InitializeFile("name", "nameRaw");
     }
 
     public void reading(byte[] write, int testAmount){
@@ -69,6 +70,7 @@ public class COMReader{
                 if (numRead >= messageSize){                                    // if the entire message was read, put it in the file
                     System.out.println("Read " + numRead + " bytes.");
                     readOutBuffer(readBuffer);
+                    fileWriter.WriteToFileRaw(SplitUpArray(readBuffer));
                     fileWriter.WriteToFile(SplitUpArray(readBuffer));
                 }
                 else if (numRead < messageSize && numRead >= 0){                // message not read, add one to test
@@ -97,8 +99,10 @@ public class COMReader{
             System.out.println(readBuffer[bufferLength]);
         }
         for (int i =0; i<4; i++){
-            System.out.print(splitArray[i][0] + " ");
-            System.out.println(splitArray[i][1]);
+            String st1 = Integer.toHexString(splitArray[i][0] & 0xFF);
+            String st2 = Integer.toHexString(splitArray[i][1] & 0xFF);
+            System.out.print(splitArray[i][0] + " Hex: "+ st1+ " ");
+            System.out.println(splitArray[i][1]+ " Hex: "+ st2 );
         }
 
     }
