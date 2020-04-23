@@ -1,17 +1,15 @@
 import com.fazecast.jSerialComm.SerialPort;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.*;
-//import gnu.io.*;
 
 public class COMReader{
-    FileWriter fileWriter;
+    private FileWriter fileWriter;
 
-    SerialPort[] portList;
-    SerialPort comPort;
+    private SerialPort[] portList;
+    private SerialPort comPort;
 
-    int messageSize = 8;
+    private int messageSize = 8;
 
     public COMReader(){
         portList = SerialPort.getCommPorts();
@@ -48,25 +46,35 @@ public class COMReader{
         fileWriter.InitializeFile("name");
     }
 
-    public void reading(){
+    public void reading(byte[] write, int testAmount){
         try {
-            while (true){
-                while (comPort.bytesAvailable() < messageSize){
+            while (testAmount > 0){
+                comPort.writeBytes(write, 1);
+
+                 //If, after 2 seconds 6 pieces of data have not been read, go further, and read out the buffer anyway
+                 //do not write to file though!
+                int timer = 20;
+                while (comPort.bytesAvailable() < messageSize && timer >= 0){
                     Thread.sleep(100);
+                    timer --;
                 }
+
                 byte[] readBuffer = new byte[comPort.bytesAvailable()];
-                int numRead = comPort.readBytes(readBuffer, readBuffer.length);
-                if (numRead > 0){
+                int numRead = comPort.readBytes(readBuffer, readBuffer.length); // numRead is the amount of bytes that were read
+
+                if (numRead >= messageSize){                                    // if the entire message was read, put it in the file
                     System.out.println("Read " + numRead + " bytes.");
                     readOutBuffer(readBuffer);
                     fileWriter.WriteToFile(SplitUpArray(readBuffer));
                 }
-                else if (numRead == 0){
-                    System.out.println("No bytes were read");
+                else if (numRead < messageSize && numRead >= 0){                // message not read, add one to test
+                    System.out.println("Not enough bytes were read");
+                    testAmount ++;
                 }
                 else if(numRead == -1){
                     System.out.println("An error occurred when reading");
                 }
+                testAmount--;
             }
         }catch (Exception e){
             System.out.println(e);
@@ -111,4 +119,11 @@ public class COMReader{
         return splitArray;
     }
 
+    public int getMessageSize() {
+        return messageSize;
+    }
+
+    public void setMessageSize(int messageSize) {
+        this.messageSize = messageSize;
+    }
 }
