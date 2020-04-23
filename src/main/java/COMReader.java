@@ -50,6 +50,7 @@ public class COMReader{
     public void reading(byte[] write, int testAmount){
         try {
             while (testAmount > 0){
+                System.out.println("here");
                 if (comPort.writeBytes(write, 1) < 0){
                     System.out.println("an error occurred when sending over UART");
                 }
@@ -57,7 +58,7 @@ public class COMReader{
                  //If, after 2 seconds 6 pieces of data have not been read, go further, and read out the buffer anyway
                  //do not write to file though!
                 int timer = 2000;
-                while (comPort.bytesAvailable() < messageSize){ //&& timer >= 0){
+                while (comPort.bytesAvailable() < messageSize && timer >= 0){
                     Thread.sleep(100);
                     timer --;
                 }
