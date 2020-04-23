@@ -59,7 +59,7 @@ public class COMReader{
                  //do not write to file though!
                 int timer = 2000;
                 while (comPort.bytesAvailable() < messageSize && timer >= 0){
-                    Thread.sleep(10);
+                    Thread.sleep(1);
                     timer --;
                 }
 
@@ -73,6 +73,7 @@ public class COMReader{
                 }
                 else if (numRead < messageSize && numRead >= 0){                // message not read, add one to test
                     System.out.println("Not enough bytes were read");
+                    System.out.println("amount of bytes read: "+numRead);
                     testAmount ++;
                 }
                 else if(numRead == -1){
