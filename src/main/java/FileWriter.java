@@ -16,7 +16,9 @@ public class FileWriter {
     public void InitializeFile(String name, String nameRaw) throws FileNotFoundException {
         try {
             fileName = name;
-            file = new File(name + ".txt");
+            String userHomeFolder = System.getProperty("user.home");
+            file = new File(userHomeFolder, name + ".txt");
+            //file = new File(name + ".txt");
             if (file.createNewFile()) {
                 System.out.println("File created with name: " + name);
             } else {
@@ -24,7 +26,8 @@ public class FileWriter {
                 System.exit(0);
             }
             fileNameRaw = nameRaw;
-            fileRaw = new File(nameRaw + ".txt");
+            fileRaw = new File(userHomeFolder, nameRaw + ".txt");
+            //fileRaw = new File(nameRaw + ".txt");
             if (fileRaw.createNewFile()) {
                 System.out.println("File created with name: " + nameRaw);
             } else {
@@ -62,13 +65,13 @@ public class FileWriter {
     public void WriteToFile(byte[][] splitArray) throws IOException {
         try {
             for (int i = 0; i < 5; i++) {
-                String writeMSB = Integer.toHexString(splitArray[i][0] & 0xFF);
+                String writeMSB = String.format("%8s", Integer.toBinaryString(splitArray[i][0] & 0xFF)).replace(' ', '0');
                 String writeLSB;
-                if ((splitArray[i][1] & 0xFF) > 15) {
-                    writeLSB = Integer.toHexString(splitArray[i][1] & 0xFF);
-                } else {
-                    writeLSB = "0" + Integer.toHexString(splitArray[i][1] & 0xFF); // make sure you have 0x0..
-                }
+                //if ((splitArray[i][1] & 0xFF) > 15) {
+                    writeLSB = String.format("%8s", Integer.toBinaryString(splitArray[i][1] & 0xFF)).replace(' ', '0');
+                //} else {
+                    //writeLSB = "0000" + Integer.toBinaryString(splitArray[i][1] & 0xFF); // make sure you have 0x0..
+                //}
                 bW.write(writeMSB + writeLSB);
                 bW.newLine();
             }

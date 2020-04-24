@@ -97,8 +97,8 @@ public class COMReader {
             System.out.println(readBuffer[bufferLength]);
         }
         for (int i = 0; i < messageSize/2; i++) {
-            String st1 = Integer.toHexString(splitArray[i][0] & 0xFF);
-            String st2 = Integer.toHexString(splitArray[i][1] & 0xFF);
+            String st1 = String.format("%8s", Integer.toBinaryString(splitArray[i][0] & 0xFF)).replace(' ', '0');
+            String st2 = String.format("%8s", Integer.toBinaryString(splitArray[i][1] & 0xFF)).replace(' ', '0');
             System.out.print(splitArray[i][0] + " Hex: " + st1 + " ");
             System.out.println(splitArray[i][1] + " Hex: " + st2);
         }
