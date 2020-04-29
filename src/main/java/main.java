@@ -8,8 +8,8 @@ public class main {
         byteToWrite[0] = '1';
 
         COMReader comReader = new COMReader();
-        comReader.initialize();
-        comReader.reading(byteToWrite, 50);
+        comReader.initialize("clock16MHz", "clock16MHzRAW");
+        comReader.reading(byteToWrite, 500);
 
     }
 

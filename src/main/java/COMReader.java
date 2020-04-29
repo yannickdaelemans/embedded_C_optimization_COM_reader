@@ -34,7 +34,7 @@ public class COMReader {
         }
     }
 
-    public void initialize() throws FileNotFoundException {
+    public void initialize(String fileName, String fileNameRaw) throws FileNotFoundException {
         // initialize port
         comPort.setBaudRate(9600);
         comPort.setNumDataBits(8);
@@ -45,7 +45,7 @@ public class COMReader {
 
         // initialize file
         fileWriter = new FileWriter();
-        fileWriter.InitializeFile("name", "nameRaw");
+        fileWriter.InitializeFile(fileName, fileNameRaw);
     }
 
     public void reading(byte[] write, int testAmount) {
