@@ -16,7 +16,6 @@ public class FileWriter {
             fileName = name;
             String userHomeFolder = System.getProperty("user.home");
             file = new File(userHomeFolder, name + ".txt");
-            //file = new File(name + ".txt");
             if (file.createNewFile()) {
                 System.out.println("File created with name: " + name);
             } else {
