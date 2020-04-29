@@ -72,10 +72,6 @@ public class COMReader {
                     readOutBuffer(readBuffer);
                     fileWriter.WriteToFileRaw(SplitUpArray(readBuffer));
                     fileWriter.WriteToFile(SplitUpArray(readBuffer));
-                } else if (numRead < messageSize && numRead >= 0) {                // message not read, add one to test
-                    System.out.println("Not enough bytes were read");
-                    System.out.println("amount of bytes read: " + numRead);
-                    testAmount++;
                 } else if (numRead == -1) {
                     System.out.println("An error occurred when reading");
                 }
