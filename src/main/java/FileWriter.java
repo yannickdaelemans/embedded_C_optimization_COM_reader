@@ -1,17 +1,15 @@
 import java.io.*;
 
-import static java.lang.Math.abs;
-
 public class FileWriter {
 
-    File file;
-    File fileRaw;
-    FileOutputStream fosRaw;
-    BufferedWriter bWRaw;
-    FileOutputStream fos;
-    BufferedWriter bW;
-    String fileName;
-    String fileNameRaw;
+    private File file;
+    private File fileRaw;
+    private FileOutputStream fosRaw;
+    private BufferedWriter bWRaw;
+    private FileOutputStream fos;
+    private BufferedWriter bW;
+    private String fileName;
+    private String fileNameRaw;
 
     public void InitializeFile(String name, String nameRaw) throws FileNotFoundException {
         try {
