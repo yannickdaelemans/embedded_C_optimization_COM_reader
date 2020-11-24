@@ -10,9 +10,11 @@ public class COMReader {
     private SerialPort[] portList;
     SerialPort comPort;
 
-    private int messageSize = 10;
+    private int messageSize;
 
-    public COMReader() {
+    public COMReader(int protocolSize, String COMPort) {
+        messageSize = protocolSize*2;
+
         portList = SerialPort.getCommPorts();
         int listLength = portList.length;
 
@@ -21,7 +23,7 @@ public class COMReader {
             System.out.println(listLength);
             SerialPort currPort = portList[listLength];
             System.out.println(currPort.getSystemPortName());
-            if (currPort.getSystemPortName().equals("COM11")) {
+            if (currPort.getSystemPortName().equals(COMPort)) {
                 comPort = currPort;
                 System.out.println("connecting to: " + comPort.getPortDescription());
                 break;
@@ -45,7 +47,7 @@ public class COMReader {
 
         // initialize file
         fileWriter = new FileWriter();
-        fileWriter.InitializeFile(fileName, fileNameRaw);
+        fileWriter.InitializeFile(fileName, fileNameRaw, messageSize/2);
     }
 
     public void reading(byte[] write, int testAmount) {
@@ -56,12 +58,16 @@ public class COMReader {
                     System.out.println("an error occurred when sending over UART");
                 }
 
-                //If, after 2 seconds 6 pieces of data have not been read, go further, and read out the buffer anyway
+                //If, after 2 seconds 8 pieces of data have not been read, go further, and read out the buffer anyway
                 //do not write to file though!
                 int timer = 2000;
                 while (comPort.bytesAvailable() < messageSize && timer >= 0) {
                     Thread.sleep(1);
                     timer--;
+                }
+                if(timer <= 0){
+                    System.out.println("Time expired");
+                    testAmount = -1;
                 }
 
                 byte[] readBuffer = new byte[comPort.bytesAvailable()];
@@ -92,6 +98,7 @@ public class COMReader {
             bufferLength--;
             System.out.println(readBuffer[bufferLength]);
         }
+
         for (int i = 0; i < messageSize/2; i++) {
             String st1 = String.format("%8s", Integer.toBinaryString(splitArray[i][0] & 0xFF)).replace(' ', '0');
             String st2 = String.format("%8s", Integer.toBinaryString(splitArray[i][1] & 0xFF)).replace(' ', '0');

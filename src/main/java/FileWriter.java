@@ -10,9 +10,11 @@ public class FileWriter {
     private BufferedWriter bW;
     private String fileName;
     private String fileNameRaw;
+    private int writeSize = 0;
 
-    public void InitializeFile(String name, String nameRaw) throws FileNotFoundException {
+    public void InitializeFile(String name, String nameRaw, int protocolSize) throws FileNotFoundException {
         try {
+            writeSize = protocolSize;
             fileName = name;
             String userHomeFolder = System.getProperty("user.home");
             file = new File(userHomeFolder, name + ".txt");
@@ -47,7 +49,7 @@ public class FileWriter {
 
     public void WriteToFileRaw(byte[][] splitArray) throws IOException {
         try {
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 8; i++) {
                 bWRaw.write(splitArray[i][0]);
                 bWRaw.newLine();
                 bWRaw.write(splitArray[i][1]);
@@ -61,7 +63,7 @@ public class FileWriter {
 
     public void WriteToFile(byte[][] splitArray) throws IOException {
         try {
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 8; i++) {
                 String writeMSB = String.format("%8s", Integer.toBinaryString(splitArray[i][0] & 0xFF)).replace(' ', '0');
                 String writeLSB;
                 //if ((splitArray[i][1] & 0xFF) > 15) {
@@ -72,6 +74,7 @@ public class FileWriter {
                 bW.write(writeMSB + writeLSB);
                 bW.newLine();
             }
+            bW.newLine();
         } catch (IOException e) {
             System.out.println(e);
         }
