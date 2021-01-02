@@ -55,6 +55,9 @@ public class COMReader {
 
     /*
      * Start the reading from the USB
+     * First write the right byte to the target.
+     * Then wait for data to come in.
+     * If there is any data, split it up correclty and push it to a file.
      */
     public void reading(byte[] write, int testAmount) {
         try {
