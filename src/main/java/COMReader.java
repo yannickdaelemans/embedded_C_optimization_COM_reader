@@ -7,10 +7,10 @@ import java.util.*;
 public class COMReader {
     private FileWriter fileWriter;
 
-    private SerialPort[] portList;
+    public SerialPort[] portList;
     SerialPort comPort;
 
-    private int messageSize;
+    private final int messageSize;
 
     public COMReader(int protocolSize, String COMPort) {
         messageSize = protocolSize*2;
