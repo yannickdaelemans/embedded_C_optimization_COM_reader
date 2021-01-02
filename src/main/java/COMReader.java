@@ -134,6 +134,9 @@ public class COMReader {
         return splitArray;
     }
 
+    /*
+     * Close all the files
+     */
     public void closeAll(){
         try{
             fileWriter.closeBufferdWriter();

@@ -12,6 +12,9 @@ public class FileWriter {
     private String fileNameRaw;
     private int writeSize = 0;
 
+    /*
+     * Initializing the file with the right name
+     */
     public void InitializeFile(String name, String nameRaw, int protocolSize) throws FileNotFoundException {
         try {
             writeSize = protocolSize;
@@ -61,6 +64,9 @@ public class FileWriter {
 
     }
 
+    /*
+     * Write to file in order of protocol size.
+     */
     public void WriteToFile(byte[][] splitArray, int length) throws IOException {
         try {
             for (int i = 0; i < length; i++) {
