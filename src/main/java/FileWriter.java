@@ -66,15 +66,10 @@ public class FileWriter {
             for (int i = 0; i < length; i++) {
                 String writeMSB = String.format("%8s", Integer.toBinaryString(splitArray[i][0] & 0xFF)).replace(' ', '0');
                 String writeLSB;
-                //if ((splitArray[i][1] & 0xFF) > 15) {
-                    writeLSB = String.format("%8s", Integer.toBinaryString(splitArray[i][1] & 0xFF)).replace(' ', '0');
-                //} else {
-                    //writeLSB = "0000" + Integer.toBinaryString(splitArray[i][1] & 0xFF); // make sure you have 0x0..
-                //}
+                writeLSB = String.format("%8s", Integer.toBinaryString(splitArray[i][1] & 0xFF)).replace(' ', '0');
                 bW.write(writeMSB + writeLSB);
                 bW.newLine();
             }
-            //bW.newLine();
         } catch (IOException e) {
             System.out.println(e);
         }
