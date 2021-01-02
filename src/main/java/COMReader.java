@@ -36,6 +36,9 @@ public class COMReader {
         }
     }
 
+    /*
+     * Initialize the communication over USB
+     */
     public void initialize(String fileName, String fileNameRaw) throws FileNotFoundException {
         // initialize port
         comPort.setBaudRate(9600);
@@ -50,18 +53,19 @@ public class COMReader {
         fileWriter.InitializeFile(fileName, fileNameRaw, messageSize/2);
     }
 
+    /*
+     * Start the reading from the USB
+     */
     public void reading(byte[] write, int testAmount) {
         try {
+            if (comPort.writeBytes(write, 1) < 0) {
+                System.out.println("an error occurred when sending over UART");
+            }
             while (testAmount > 0) {
-                System.out.println("here");
-                if (comPort.writeBytes(write, 1) < 0) {
-                    System.out.println("an error occurred when sending over UART");
-                }
-
-                //If, after 2 seconds 8 pieces of data have not been read, go further, and read out the buffer anyway
-                //do not write to file though!
-                int timer = 2000;
-                while (comPort.bytesAvailable() < messageSize && timer >= 0) {
+                //System.out.println("here");
+                //If, after half a second there is no data,  go further, and read out the buffer anyway
+                int timer = 500;
+                while (comPort.bytesAvailable() <= 0 && timer >= 0) {
                     Thread.sleep(1);
                     timer--;
                 }
@@ -74,23 +78,18 @@ public class COMReader {
                 int numRead = comPort.readBytes(readBuffer, readBuffer.length); // numRead is the amount of bytes that were read
 
                 if (numRead >= messageSize) {                                    // if the entire message was read, put it in the file
-                    System.out.println("Read " + numRead + " bytes.");
-                    readOutBuffer(readBuffer);
-                    fileWriter.WriteToFileRaw(SplitUpArray(readBuffer));
-                    fileWriter.WriteToFile(SplitUpArray(readBuffer));
+                    fileWriter.WriteToFile(SplitUpArray(readBuffer), readBuffer.length/2);
                 } else if (numRead == -1) {
                     System.out.println("An error occurred when reading");
                 }
                 testAmount--;
             }
-            fileWriter.closeBufferdWriter();
         } catch (Exception e) {
             System.out.println(e);
         }
     }
 
     public void readOutBuffer(byte[] readBuffer) {
-        //reverseBuffer(readBuffer);
         byte[][] splitArray = new byte[messageSize/2][2];
         splitArray = SplitUpArray(readBuffer);
         int bufferLength = readBuffer.length;
@@ -99,7 +98,7 @@ public class COMReader {
             System.out.println(readBuffer[bufferLength]);
         }
 
-        for (int i = 0; i < messageSize/2; i++) {
+        for (int i = 0; i < readBuffer.length/2; i++) {
             String st1 = String.format("%8s", Integer.toBinaryString(splitArray[i][0] & 0xFF)).replace(' ', '0');
             String st2 = String.format("%8s", Integer.toBinaryString(splitArray[i][1] & 0xFF)).replace(' ', '0');
             System.out.print(splitArray[i][0] + " Hex: " + st1 + " ");
@@ -116,25 +115,28 @@ public class COMReader {
         return readBuffer;
     }
 
+    /*
+     * put 2 bytes after each other in a 2D matrix
+     */
     private byte[][] SplitUpArray(byte[] readBuffer) {
-        byte[][] splitArray = new byte[messageSize/2][2];
+        byte[][] splitArray = new byte[readBuffer.length/2][2];
         int bufferSize = readBuffer.length;
         bufferSize--;
-        for (int i = (messageSize/2)-1; i >= 0; i--) {
+        for (int i = (readBuffer.length/2)-1; i >= 0; i--) {
             for (int j = 0; j < 2; j++) {
                 splitArray[i][j] = readBuffer[bufferSize];
                 bufferSize--;
             }
         }
-
         return splitArray;
     }
 
-    public int getMessageSize() {
-        return messageSize;
-    }
-
-    public void setMessageSize(int messageSize) {
-        this.messageSize = messageSize;
+    public void closeAll(){
+        try{
+            fileWriter.closeBufferdWriter();
+        }
+        catch (Exception e) {
+            System.out.println(e);
+        }
     }
 }

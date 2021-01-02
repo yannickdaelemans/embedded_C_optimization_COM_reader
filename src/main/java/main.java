@@ -7,12 +7,13 @@ public class main {
 
         ScannerClass scanner = new ScannerClass();
 
-        byte[] byteToWrite = new byte[1];
-        byteToWrite[0] = 'M';
-
         COMReader comReader = new COMReader(scanner.getProtocolSize(), scanner.getCOMPort());
         comReader.initialize(scanner.getFileName(), scanner.getFileName()+"raw");
-        comReader.reading(scanner.getByteToWrite(), 50000);
+
+        for(int i = 0; i < scanner.getTests(); i++) {
+            comReader.reading(scanner.getByteToWrite(), 50000);
+        }
+        comReader.closeAll();
 
     }
 

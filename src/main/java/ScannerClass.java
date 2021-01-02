@@ -7,6 +7,7 @@ public class ScannerClass {
     byte[] byteToWrite = new byte[1];
     String fileName;
     int protocolSize = 0;
+    int tests = 0;
 
     public ScannerClass(){
         Scanner myObj = new Scanner(System.in);  // Create a Scanner object
@@ -16,6 +17,8 @@ public class ScannerClass {
         fileName = myObj.nextLine();  // Read user input
         System.out.println("Enter protocol size ");
         protocolSize = myObj.nextInt();  // Read user input
+        System.out.println("Enter amount of tests (in hundreds) ");
+        tests = myObj.nextInt();  // Read user input
         System.out.println("Enter character ");
         char input = myObj.next().charAt(0);
         byteToWrite[0] =  (byte)input;  // Read user input
@@ -52,5 +55,13 @@ public class ScannerClass {
 
     public void setProtocolSize(int protocolSize) {
         this.protocolSize = protocolSize;
+    }
+
+    public int getTests() {
+        return tests;
+    }
+
+    public void setTests(int tests) {
+        this.tests = tests;
     }
 }

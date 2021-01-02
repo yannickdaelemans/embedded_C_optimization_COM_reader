@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="embedded_C_optimization_COM_reader" target="1.5" />
+      <module name="embedded_C_optimization_COM_reader" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
